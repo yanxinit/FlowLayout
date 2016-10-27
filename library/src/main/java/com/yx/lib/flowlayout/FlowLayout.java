@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
@@ -97,20 +99,30 @@ public class FlowLayout extends HorizontalScrollView {
         mFlowAdapter = flowAdapter;
         mFlowItemCount = mFlowAdapter.getItemCount();
         for (int i = 0; i < mFlowItemCount; i++) {
+            LinearLayout containerLayout = new LinearLayout(getContext());
+            containerLayout.setOrientation(LinearLayout.VERTICAL);
             FlowItemView flowItemView = new FlowItemView(getContext(), i < mFlowAdapter.getSelectedCount(), i);
+            containerLayout.addView(flowItemView);
             if (mFlowAdapter.getItemView(i) != null) {
-                FrameLayout.LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-                flowItemView.addView(mFlowAdapter.getItemView(i), params);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                containerLayout.addView(mFlowAdapter.getItemView(i), params);
+                mFlowAdapter.getItemView(i).setSelected(i < mFlowAdapter.getSelectedCount());
             }
-            mFlowItemStrip.addView(flowItemView);
+            mFlowItemStrip.addView(containerLayout);
         }
     }
 
-    class FlowItemView extends FrameLayout {
+    int dpToPx(int dps) {
+        return Math.round(getResources().getDisplayMetrics().density * dps);
+    }
+
+    class FlowItemView extends View {
 
         Paint mWidgetPaint;
         Paint mLinePaint;
+        Paint mContentTextPaint;
 
         int mActualWidgetSize;
         int mPosition;
@@ -118,10 +130,15 @@ public class FlowLayout extends HorizontalScrollView {
         public FlowItemView(Context context, boolean selected, int position) {
             super(context);
             setWillNotDraw(false);
+
             mPosition = position;
             mWidgetPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mLinePaint.setStrokeWidth(mLineHeight);
+            mContentTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mContentTextPaint.setColor(Color.WHITE);
+            mContentTextPaint.setTextSize(dpToPx(14));
+            mContentTextPaint.setTextAlign(Paint.Align.CENTER);
             setSelected(selected);
         }
 
@@ -154,8 +171,19 @@ public class FlowLayout extends HorizontalScrollView {
             super.onDraw(canvas);
             canvas.drawCircle(mWidgetPadding + mActualWidgetSize / 2, mActualWidgetSize / 2,
                     mActualWidgetSize / 2, mWidgetPaint);
+            drawText(canvas);
             if (mShowLine)
                 drawLine(canvas);
+        }
+
+        private void drawText(Canvas canvas) {
+            String content = mFlowAdapter.getContents()[mPosition];
+            if (TextUtils.isEmpty(content))
+                return;
+            Rect rect = new Rect();
+            mContentTextPaint.getTextBounds(content, 0, content.length(), rect);
+            canvas.drawText(content, mWidgetPadding + mActualWidgetSize / 2
+                    , mActualWidgetSize / 2 + rect.height() / 2, mContentTextPaint);
         }
 
         private void drawLine(Canvas canvas) {
@@ -214,8 +242,6 @@ public class FlowLayout extends HorizontalScrollView {
         protected void drawableStateChanged() {
             super.drawableStateChanged();
             updateWidgetColor();
-            if (getChildCount() != 0)
-                getChildAt(0).setSelected(isSelected());
         }
 
         private void updateWidgetColor() {

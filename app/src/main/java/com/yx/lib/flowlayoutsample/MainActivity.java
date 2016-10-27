@@ -8,10 +8,10 @@ import com.yx.lib.flowlayout.FlowLayout;
 public class MainActivity extends AppCompatActivity {
 
     private static final String[] FLOW_CONTENTS1 = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"};
-    private static final String[] FLOW_DESCS1 = {"DESC 1", "DESC 2", "DESC 3", "DESC 4"};
+    private static final String[] FLOW_DESCS1 = {"+1", "+2", "+3", "+4"};
 
     private static final String[] FLOW_CONTENTS2 = {"1", "2", "3", "4", "5", "6", "7"};
-    private static final String[] FLOW_DESCS2 = {"DESC 1", "DESC 2", "DESC 3", "DESC 4"};
+    private static final String[] FLOW_DESCS2 = {"+1", "+2", "+3", "+4"};
 
     FlowLayout mFlowLayout1;
     FlowLayout mFlowLayout2;
