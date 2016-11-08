@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.TextUtils;
@@ -29,12 +28,14 @@ public class FlowLayout extends HorizontalScrollView {
 
     ColorStateList mLineColors;
     ColorStateList mWidgetColors;
+    ColorStateList mContentTextColors;
     boolean mShowLine;
     int mMode;
     int mLineHidePosition;
     int mWidgetPadding;
     int mWidgetSize;
     int mLineHeight;
+    float mContentTextSize;
 
     private int mTabMaxWidth;
 
@@ -59,12 +60,14 @@ public class FlowLayout extends HorizontalScrollView {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout, defStyleAttr, 0);
         mLineColors = array.getColorStateList(R.styleable.FlowLayout_flowLineColor);
         mWidgetColors = array.getColorStateList(R.styleable.FlowLayout_flowWidgetColor);
+        mContentTextColors = array.getColorStateList(R.styleable.FlowLayout_flowContentTextColor);
         mShowLine = array.getBoolean(R.styleable.FlowLayout_flowShowLine, false);
         mMode = array.getInt(R.styleable.FlowLayout_flowMode, MODE_FIXED);
         mLineHidePosition = array.getInt(R.styleable.FlowLayout_flowLineHidePosition, LINE_HIDE_POSITION_BOTH);
         mWidgetPadding = array.getDimensionPixelSize(R.styleable.FlowLayout_flowWidgetPadding, 0);
         mWidgetSize = array.getDimensionPixelSize(R.styleable.FlowLayout_flowWidgetSize, 0);
         mLineHeight = array.getDimensionPixelSize(R.styleable.FlowLayout_flowLineHeight, 0);
+        mContentTextSize = array.getDimension(R.styleable.FlowLayout_flowContentTextSize, dpToPx(14));
         array.recycle();
     }
 
@@ -136,8 +139,7 @@ public class FlowLayout extends HorizontalScrollView {
             mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mLinePaint.setStrokeWidth(mLineHeight);
             mContentTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            mContentTextPaint.setColor(Color.WHITE);
-            mContentTextPaint.setTextSize(dpToPx(14));
+            mContentTextPaint.setTextSize(mContentTextSize);
             mContentTextPaint.setTextAlign(Paint.Align.CENTER);
             setSelected(selected);
         }
@@ -254,6 +256,11 @@ public class FlowLayout extends HorizontalScrollView {
             color = mLineColors.getColorForState(getDrawableState(), 0);
             if (color != mLinePaint.getColor()) {
                 mLinePaint.setColor(color);
+                inval = true;
+            }
+            color = mContentTextColors.getColorForState(getDrawableState(), 0);
+            if (color != mContentTextPaint.getColor()) {
+                mContentTextPaint.setColor(color);
                 inval = true;
             }
             if (inval) {

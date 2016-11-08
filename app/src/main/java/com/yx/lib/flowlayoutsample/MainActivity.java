@@ -21,11 +21,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFlowLayout1 = (FlowLayout) findViewById(R.id.layout_flow1);
-        mFlowLayout1.setAdapter(new SampleFlowAdapter(this, R.color.selector_text_color,
-                R.dimen.text_size, FLOW_CONTENTS1, FLOW_DESCS1));
+        mFlowLayout1.setAdapter(new SampleFlowAdapter(this, R.style.FlowDescStyle, FLOW_CONTENTS1, FLOW_DESCS1));
         mFlowLayout2 = (FlowLayout) findViewById(R.id.layout_flow2);
-        mFlowLayout2.setAdapter(new SampleFlowAdapter(this, R.color.selector_text_color,
-                R.dimen.text_size, FLOW_CONTENTS2, FLOW_DESCS2));
+        mFlowLayout2.setAdapter(new SampleFlowAdapter(this, R.style.FlowDescStyle, FLOW_CONTENTS2, FLOW_DESCS2));
     }
 
 }

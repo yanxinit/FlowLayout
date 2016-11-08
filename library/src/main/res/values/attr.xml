@@ -17,5 +17,7 @@
         <attr name="flowWidgetPadding" format="dimension"/>
         <attr name="flowWidgetSize" format="dimension"/>
         <attr name="flowLineHeight" format="dimension"/>
+        <attr name="flowContentTextSize" format="dimension"/>
+        <attr name="flowContentTextColor" format="color"/>
     </declare-styleable>
 </resources>

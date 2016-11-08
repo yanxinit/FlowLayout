@@ -9,9 +9,9 @@ public class SampleFlowAdapter extends SimpleTextFlowAdapter {
     private String[] mContents;
     private String[] mDescs;
 
-    public SampleFlowAdapter(Context context, int textColorRes, int textSizeRes,
+    public SampleFlowAdapter(Context context, int styleRes,
                              String[] contents, String[] descs) {
-        super(context, textColorRes, textSizeRes);
+        super(context, styleRes);
         mContents = contents;
         mDescs = descs;
     }
