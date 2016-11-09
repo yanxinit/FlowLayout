@@ -10,6 +10,7 @@ public abstract class FlowAdapter {
 
     public FlowAdapter(FlowLayout flowLayout, Context context) {
         mContext = context;
+        mFlowLayout = flowLayout;
     }
 
     public abstract View getItemView(int position);
