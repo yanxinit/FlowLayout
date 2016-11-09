@@ -40,6 +40,7 @@ public class FlowLayout extends HorizontalScrollView {
     private int mTabMaxWidth;
 
     int mFlowItemCount;
+
     private FlowAdapter mFlowAdapter;
 
     public FlowLayout(Context context) {
@@ -73,9 +74,6 @@ public class FlowLayout extends HorizontalScrollView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int specSize = MeasureSpec.getSize(widthMeasureSpec);
-        if (MeasureSpec.getMode(widthMeasureSpec) != MeasureSpec.UNSPECIFIED)
-            mTabMaxWidth = specSize;
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (getChildCount() == 1) {
             final View childView = getChildAt(0);
@@ -100,11 +98,29 @@ public class FlowLayout extends HorizontalScrollView {
 
     public void setAdapter(FlowAdapter flowAdapter) {
         mFlowAdapter = flowAdapter;
+        updateViews();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if ((mTabMaxWidth == 0 || mTabMaxWidth != w) && mFlowAdapter != null) {
+            mTabMaxWidth = w;
+            updateViews();
+        }
+    }
+
+    public void updateViews() {
+        if (mTabMaxWidth == 0)
+            return;
+
+        mFlowItemStrip.removeAllViews();
         mFlowItemCount = mFlowAdapter.getItemCount();
         for (int i = 0; i < mFlowItemCount; i++) {
             LinearLayout containerLayout = new LinearLayout(getContext());
             containerLayout.setOrientation(LinearLayout.VERTICAL);
             FlowItemView flowItemView = new FlowItemView(getContext(), i < mFlowAdapter.getSelectedCount(), i);
+            flowItemView.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
             containerLayout.addView(flowItemView);
             if (mFlowAdapter.getItemView(i) != null) {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -113,7 +129,7 @@ public class FlowLayout extends HorizontalScrollView {
                 containerLayout.addView(mFlowAdapter.getItemView(i), params);
                 mFlowAdapter.getItemView(i).setSelected(i < mFlowAdapter.getSelectedCount());
             }
-            mFlowItemStrip.addView(containerLayout);
+            mFlowItemStrip.addView(containerLayout, flowItemView.getMeasuredWidth(), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
     }
 

@@ -2,6 +2,7 @@ package com.yx.lib.flowlayoutsample;
 
 import android.content.Context;
 
+import com.yx.lib.flowlayout.FlowLayout;
 import com.yx.lib.flowlayout.SimpleTextFlowAdapter;
 
 public class SampleFlowAdapter extends SimpleTextFlowAdapter {
@@ -9,9 +10,9 @@ public class SampleFlowAdapter extends SimpleTextFlowAdapter {
     private String[] mContents;
     private String[] mDescs;
 
-    public SampleFlowAdapter(Context context, int styleRes,
+    public SampleFlowAdapter(FlowLayout flowLayout, Context context, int styleRes,
                              String[] contents, String[] descs) {
-        super(context, styleRes);
+        super(flowLayout, context, styleRes);
         mContents = contents;
         mDescs = descs;
     }

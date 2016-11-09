@@ -20,4 +20,10 @@
         <attr name="flowContentTextSize" format="dimension"/>
         <attr name="flowContentTextColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="FlowLayoutDescText">
+        <attr name="android:textSize"/>
+        <attr name="android:textColor"/>
+        <attr name="android:paddingTop"/>
+    </declare-styleable>
 </resources>

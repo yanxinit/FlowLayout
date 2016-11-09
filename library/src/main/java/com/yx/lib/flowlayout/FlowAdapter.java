@@ -6,8 +6,9 @@ import android.view.View;
 public abstract class FlowAdapter {
 
     private Context mContext;
+    private FlowLayout mFlowLayout;
 
-    public FlowAdapter(Context context) {
+    public FlowAdapter(FlowLayout flowLayout, Context context) {
         mContext = context;
     }
 
@@ -22,5 +23,9 @@ public abstract class FlowAdapter {
     }
 
     public abstract int getSelectedCount();
+
+    public void notifyDataChanged() {
+        mFlowLayout.updateViews();
+    }
 
 }

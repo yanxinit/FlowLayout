@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -14,16 +15,19 @@ public abstract class SimpleTextFlowAdapter extends FlowAdapter {
 
     float mTextSize;
     int mTextColor;
+    int mPaddingTop;
 
-    public SimpleTextFlowAdapter(Context context, int styleRes) {
-        super(context);
+    public SimpleTextFlowAdapter(FlowLayout flowLayout, Context context, int styleRes) {
+        super(flowLayout, context);
         mStyleRes = styleRes;
         TypedArray array = getContext().obtainStyledAttributes(mStyleRes,
-                android.support.v7.appcompat.R.styleable.TextAppearance);
+                R.styleable.FlowLayoutDescText);
         mTextSize = array.getDimensionPixelSize(
-                android.support.v7.appcompat.R.styleable.TextAppearance_android_textSize, 0);
+                R.styleable.FlowLayoutDescText_android_textSize, 0);
         mTextColor = array.getColor(
-                android.support.v7.appcompat.R.styleable.TextAppearance_android_textColor, Color.BLACK);
+                R.styleable.FlowLayoutDescText_android_textColor, Color.BLACK);
+        mPaddingTop = array.getDimensionPixelSize(
+                R.styleable.FlowLayoutDescText_android_paddingTop, 0);
         array.recycle();
     }
 
@@ -32,10 +36,11 @@ public abstract class SimpleTextFlowAdapter extends FlowAdapter {
         if (TextUtils.isEmpty(getDesc(position)))
             return null;
         TextView view = new TextView(getContext());
-        view.setTextSize(mTextSize);
+        view.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
         view.setTextColor(mTextColor);
         view.setText(getDesc(position));
         view.setGravity(Gravity.CENTER);
+        view.setPadding(0, mPaddingTop, 0, 0);
         return view;
     }
 
